@@ -7,10 +7,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +21,18 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request){
+        log.info("Inside AuthController: register() {}", request);
         AuthResponse response = userService.register(request);
+        log.info("Inside AuthController: register() {}", response);
 
         return ResponseEntity.status(201).body(response);
+    }
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestParam String token){
+        log.info("Inside AuthController: verifyEmail() {}", token);
+        userService.verifyEmail(token);
+
+        return ResponseEntity.status(200).body(Map.of("message", "Email verified Successfully"));
     }
 }

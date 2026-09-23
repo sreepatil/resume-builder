@@ -20,18 +20,14 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String username;
 
-    @Value("${spring.mail.password}")
-    private String password;
-
     private final JavaMailSender javaMailSender;
 
     public void sendHtmlEmail(String to, String subject, String htmlContent)
             throws MessagingException {
 
+        log.info("Inside EmailService()");
         log.info("Sending email to: {}", to);
         log.info("SMTP username: {}", username);
-        log.info("SMTP password loaded: {}",
-                password != null && !password.isBlank());
         log.info("From email: {}", fromEmail);
 
         MimeMessage message = javaMailSender.createMimeMessage();

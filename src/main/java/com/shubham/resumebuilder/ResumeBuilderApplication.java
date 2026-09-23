@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ResumebuilderApplication {
+public class ResumeBuilderApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ResumebuilderApplication.class, args);
+		SpringApplication.run(ResumeBuilderApplication.class, args);
 	}
 
 }

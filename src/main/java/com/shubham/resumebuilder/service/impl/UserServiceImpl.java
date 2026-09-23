@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthResponse register(RegisterRequest request) {
+        log.info("Inside AuthService: register() {}", request);
 
         if (userRepository.existsByEmail(request.getEmail())){
             throw new ResourceExistsException("User with this email Already Exists :" +request.getEmail());
@@ -46,6 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void sendVerificationEmail(User savedUser) {
+        log.info("Inside authService: sendVerificationEmail() ", savedUser);
         try {
             String link = appBaseUrl + "/api/auth/verify-email?token=" + savedUser.getVerificationToken();
             String html = "<div style='font-family:sans-serif'>" +
@@ -70,6 +72,23 @@ public class UserServiceImpl implements UserService {
         } catch (RuntimeException e) {
             throw new RuntimeException("Failed to send Verification email: " + e.getMessage());
         }
+    }
+
+    @Override
+    public void verifyEmail(String token) {
+        log.info("Inside AuthService: verifyEmail() {}", token);
+
+        User user = userRepository.findByVerificationToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid or expired verification token "));
+
+        if (user.getVerificationExpires() != null && user.getVerificationExpires().isBefore(LocalDateTime.now())){
+            throw new RuntimeException("Verification token has expired please request new token");
+        }
+
+        user.setEmailVerified(true);
+        user.setVerificationToken(null);
+        user.setVerificationExpires(null);
+        userRepository.save(user);
     }
 
 

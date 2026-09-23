@@ -9,4 +9,6 @@ public interface UserService {
     AuthResponse register(RegisterRequest request);
 
     void sendVerificationEmail(User savedUser);
+
+    void verifyEmail(String token);
 }
